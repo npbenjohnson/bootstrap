@@ -125,11 +125,22 @@ function($scope, $element, $attrs, $compile, $log, $parse, $window, $document, $
 
         $scope.date = dateParser.fromTimezone(value, ngModelOptions.getOption('timezone'));
 
+        if (ngModelOptions.getOption('allowInvalid') && isNaN($scope.date)) {
+            $scope.date = value;
+            return value;
+        }
+
         return dateParser.filter($scope.date, dateFormat);
       });
     } else {
       ngModel.$formatters.push(function(value) {
         $scope.date = dateParser.fromTimezone(value, ngModelOptions.getOption('timezone'));
+
+        if (ngModelOptions.getOption('allowInvalid') && isNaN($scope.date)) {
+            $scope.date = value;
+            return value;
+        }
+
         return value;
       });
     }
@@ -191,7 +202,7 @@ function($scope, $element, $attrs, $compile, $log, $parse, $window, $document, $
       } else if (angular.isDate($scope.datepickerOptions[key])) {
         dates[key] = new Date($scope.datepickerOptions[key]);
       } else {
-        if ($datepickerPopupLiteralWarning) {
+        if ($datepickerPopupLiteralWarning && !ngModelOptions.getOption('allowInvalid')) {
           $log.warn('Literal date support has been deprecated, please switch to date object usage');
         }
 

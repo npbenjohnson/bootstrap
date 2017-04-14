@@ -580,6 +580,31 @@ describe('datepicker popup', function() {
     });
   });
 
+ describe('works with ngModelOptions allowInvalid', function() {
+    var $timeout, wrapElement;
+
+    beforeEach(inject(function(_$document_, _$sniffer_, _$timeout_) {
+      $document = _$document_;
+      $timeout = _$timeout_;
+      $rootScope.date = 'Invalid Date';
+      wrapElement = $compile('<div><input ng-model="date" ' +
+        'ng-model-options="{allowInvalid: true}" ' +
+        'uib-datepicker-popup><div>')($rootScope);
+      $rootScope.$digest();
+      assignElements(wrapElement);
+    }));
+
+    it('should initially display invalid date', function() {
+      expect(inputEl.val()).toEqual('Invalid Date');
+    });
+
+    it('should display invalid date on change', function(){
+      $rootScope.date = 'Another Invalid Date';
+      $rootScope.$digest();
+      expect(inputEl.val()).toEqual('Another Invalid Date');
+    });
+  });
+
   describe('attribute `datepickerOptions`', function() {
     describe('show-weeks', function() {
       beforeEach(function() {

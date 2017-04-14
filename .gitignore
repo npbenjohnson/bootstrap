@@ -10,6 +10,7 @@ lib-cov
 *.swo
 .DS_Store
 .idea
+.vscode
 
 pids
 logs
